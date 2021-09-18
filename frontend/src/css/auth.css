@@ -1,0 +1,13 @@
+.authGroup {
+  width: 50%;
+  margin: 300px auto;
+}
+
+.authGroup * {
+  margin: 10px;
+}
+
+.errorMessage {
+  width: 95%;
+  margin: 0 auto;
+}

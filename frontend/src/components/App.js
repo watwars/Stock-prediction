@@ -2,6 +2,8 @@ import React from "react";
 import { Switch, Route, withRouter } from "react-router-dom";
 
 import LoginPage from "./LoginPage";
+import SignUp from "./SignUp";
+import Dashboard from "./Dashboard";
 
 class App extends React.Component {
   constructor(props) {
@@ -12,11 +14,20 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    // localStorage.setItem("isLoggedIn", JSON.stringify(true));
+    // const sampleUser = {
+    //   username: "watwars",
+    //   portfolioEntries: [
+    //     { stockTickerSymbol: "FB", shareNumber: 5 },
+    //     { stockTickerSymbol: "Googl", shareNumber: 123 },
+    //   ],
+    // };
+    // localStorage.setItem("currentUser", JSON.stringify(sampleUser));
     const isLoggedIn = JSON.parse(localStorage.getItem("isLoggedIn"));
     if (isLoggedIn) {
       this.setState({ isLoggedIn });
       this.props.history.push("/dashboard");
-    } else {
+    } else if (this.props.history.location.pathname !== "/signup") {
       this.props.history.push("/login");
     }
   }
@@ -27,6 +38,12 @@ class App extends React.Component {
         <Switch>
           <Route exact path="/login">
             <LoginPage />
+          </Route>
+          <Route exact path="/signup">
+            <SignUp />
+          </Route>
+          <Route exact path="/dashboard">
+            <Dashboard />
           </Route>
         </Switch>
       </div>
