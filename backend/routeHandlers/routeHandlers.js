@@ -1,5 +1,6 @@
 const UserPortfolio = require("../models/userPortfolioModel");
 const enhancePortfolio = require("../utils/enhancePortfolio");
+const checkValidPortfolio = require("../utils/checkValidPortfolio");
 
 exports.login = async (request, response) => {
   try {
@@ -96,9 +97,11 @@ exports.updatePortfolio = async (request, response) => {
         portfolioEntries: request.body.portfolioEntries,
       }
     );
-    // adding info (risks, expected win/loss) to portfolio using our ML algorithm and using real-time data
-    newPortfolio = await enhancePortfolio(newPortfolio);
+    // checkValidPortfolio throws an exception if some stock ticker symbols are invalid (not found).
+    checkValidPortfolio(portfolio);
     if (portfolio !== null) {
+      // adding info (risks, expected win/loss) to portfolio using our ML algorithm and using real-time data
+      newPortfolio = await enhancePortfolio(newPortfolio);
       response.status(200);
       response.json({
         status: "Success",
@@ -115,7 +118,7 @@ exports.updatePortfolio = async (request, response) => {
     response.status(400);
     response.json({
       status: "error",
-      message: `Unknown error. ${error}`,
+      message: `${error}`,
     });
   }
 };
