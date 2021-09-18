@@ -71,12 +71,14 @@ exports.getPortfolio = async (request, response) => {
       response.json({
         status: "Success",
         data: portfolio,
+        message: "",
       });
     } else {
       response.status(200);
       response.json({
         status: "fail",
         message: "Portfolio not found.",
+        data: null,
       });
     }
   } catch (error) {
@@ -85,6 +87,7 @@ exports.getPortfolio = async (request, response) => {
     response.json({
       status: "error",
       message: `Unknown error. ${error}`,
+      data: null,
     });
   }
 };

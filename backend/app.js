@@ -28,6 +28,6 @@ app.post("/api/v1/signup", routeHandlers.signUpUser);
 // Front end: when successfull, front end will send a get request to same endpoint.
 app.put("/api/v1/portfolio", routeHandlers.updatePortfolio);
 
-app.get("/api/v1/portfolio", routeHandlers.getPortfolio);
+app.post("/api/v1/portfolio", routeHandlers.getPortfolio);
 
 module.exports = app;

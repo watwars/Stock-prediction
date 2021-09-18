@@ -13,6 +13,6 @@ export const authRequests = async (url, body) => {
 };
 
 export const getUserSavedStocks = async (url, body) => {
-  const response = await instance.get(url, body);
+  const response = await instance.post(url, body);
   return response.data;
 };
