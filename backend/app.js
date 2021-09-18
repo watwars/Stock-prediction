@@ -18,3 +18,5 @@ app.post("/api/v1/signup", routeHandlers.signUpUser);
 app.put("/api/v1/portfolio", routeHandlers.updatePortfolio);
 
 app.get("/api/v1/portfolio", routeHandlers.getPortfolio);
+
+module.exports = app;

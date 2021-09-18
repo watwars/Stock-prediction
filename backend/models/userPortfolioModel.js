@@ -1,5 +1,24 @@
 const mongoose = require("mongoose");
 
+class stockEntry {
+  constructor(stockTickerSymbol, shareQuantity) {
+    this.stockTickerSymbol = stockTickerSymbol;
+    this.shareQuantity = shareQuantity;
+  }
+}
+
+const stockEntrySchema = new mongoose.Schema({
+  stockTickerSymbol: {
+    type: String,
+    required: [true, "ERROR: Stock must have a ticker symbol"],
+    unique: [true, "ERROR: Ticker symbol must be unique"],
+  },
+  shareQuantity: {
+    type: Number,
+    required: [true, "ERROR: share quantity required in entry"],
+  },
+});
+
 const userPortfolioSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -12,7 +31,7 @@ const userPortfolioSchema = new mongoose.Schema({
     required: [true, "ERROR: username must have a password"],
   },
   portfolioEntries: {
-    type: [String],
+    type: [stockEntrySchema],
     required: [true, "ERROR: user must have a portfolio."],
   },
 });
