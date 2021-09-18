@@ -8,6 +8,11 @@ app.use(express.json());
 // TODO: Serving front end
 // app.use(express.static(`${__dirname}/../frontend`));
 
+app.use((request, response, next) => {
+  console.log(request.body);
+  next();
+});
+
 // Routes
 app.post("/api/v1/login", routeHandlers.login);
 
