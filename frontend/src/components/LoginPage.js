@@ -3,11 +3,13 @@ import { Link } from "react-router-dom";
 import { encrypt } from "react-crypt-gsm";
 import { authRequests } from "../helpers/requests";
 import ErrorMessage from "./ErrorMessage";
-import { convertToString } from "../helpers/utils";
+import { convertToString, checkResponse } from "../helpers/utils";
+import { useHistory } from "react-router";
 
 import "../css/auth.css";
 
 const LoginPage = () => {
+  const history = useHistory();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [err, SetErr] = useState("");
@@ -28,6 +30,7 @@ const LoginPage = () => {
     const reqUrl = "/api/v1/login";
     authRequests(reqUrl, reqBody).then((response) => {
       console.log(response);
+      checkResponse(response, reqBody, history);
     });
 
     // here

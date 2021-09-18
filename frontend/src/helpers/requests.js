@@ -8,6 +8,7 @@ const instance = axios.create({
 
 export const authRequests = async (url, body) => {
   const response = await instance.post(url, body);
+  console.log(response);
   return response.data;
 };
 
