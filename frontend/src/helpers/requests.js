@@ -8,10 +8,16 @@ const instance = axios.create({
 
 export const authRequests = async (url, body) => {
   const response = await instance.post(url, body);
+  console.log(response);
   return response.data;
 };
 
-export const getUserSavedStocks = async (url) => {
-  const response = await instance.get(url);
+export const getUserSavedStocks = async (url, body) => {
+  const response = await instance.post(url, body);
+  return response.data;
+};
+
+export const updateStock = async (url, body) => {
+  const response = await instance.put(url, body);
   return response.data;
 };

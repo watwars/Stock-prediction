@@ -12,7 +12,7 @@ export const Header = ({ username }) => {
       <div
         onClick={() => {
           localStorage.clear();
-          history.push("/");
+          history.push("/login");
         }}
         style={{ cursor: "pointer" }}
       >

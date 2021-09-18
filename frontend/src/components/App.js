@@ -14,15 +14,6 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    // localStorage.setItem("isLoggedIn", JSON.stringify(true));
-    // const sampleUser = {
-    //   username: "watwars",
-    //   portfolioEntries: [
-    //     { stockTickerSymbol: "FB", shareNumber: 5 },
-    //     { stockTickerSymbol: "Googl", shareNumber: 123 },
-    //   ],
-    // };
-    // localStorage.setItem("currentUser", JSON.stringify(sampleUser));
     const isLoggedIn = JSON.parse(localStorage.getItem("isLoggedIn"));
     if (isLoggedIn) {
       this.setState({ isLoggedIn });

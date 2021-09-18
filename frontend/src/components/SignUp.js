@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { encrypt } from "react-crypt-gsm";
 import { authRequests } from "../helpers/requests";
-import { convertToString } from "../helpers/utils";
+import { convertToString, checkResponse } from "../helpers/utils";
 import { Link } from "react-router-dom";
 import ErrorMessage from "./ErrorMessage";
+import { useHistory } from "react-router";
 
 import "../css/auth.css";
 
@@ -12,6 +13,8 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [rpassword, setRPassword] = useState("");
   const [err, SetErr] = useState("");
+
+  const history = useHistory();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -35,17 +38,11 @@ const SignUp = () => {
     const reqUrl = "/api/v1/signup";
     authRequests(reqUrl, reqBody).then((response) => {
       console.log(response);
+      let msg = checkResponse(response, reqBody, history);
+      if (msg) {
+        SetErr(msg);
+      }
     });
-
-    // here
-    // needs logic that checks successful/unsuccessful login
-
-    // if successful
-    // history.push("/dashboard")
-    // set local storage
-
-    // else
-    // show error message
   };
 
   return (
