@@ -11,7 +11,6 @@ const stockEntrySchema = new mongoose.Schema({
   stockTickerSymbol: {
     type: String,
     required: [true, "ERROR: Stock must have a ticker symbol"],
-    unique: [true, "ERROR: Ticker symbol must be unique"],
   },
   shareQuantity: {
     type: Number,

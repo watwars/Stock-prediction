@@ -19,6 +19,11 @@ app.use(function (req, res, next) {
 // TODO: Serving front end
 // app.use(express.static(`${__dirname}/../frontend`));
 
+app.use((request, response, next) => {
+  console.log(request.body);
+  next();
+});
+
 // Routes
 app.post("/api/v1/login", routeHandlers.login);
 
@@ -28,6 +33,6 @@ app.post("/api/v1/signup", routeHandlers.signUpUser);
 // Front end: when successfull, front end will send a get request to same endpoint.
 app.put("/api/v1/portfolio", routeHandlers.updatePortfolio);
 
-app.post("/api/v1/portfolio", routeHandlers.getPortfolio);
+app.get("/api/v1/portfolio", routeHandlers.getPortfolio);
 
 module.exports = app;
