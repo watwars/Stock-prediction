@@ -1,5 +1,3 @@
-import { useHistory } from "react-router";
-
 export const convertToString = (arr) => {
   let string = "";
   arr.forEach((num) => (string += num));
@@ -12,6 +10,10 @@ export const checkResponse = (resp, user, history) => {
       localStorage.setItem("isLoggedIn", JSON.stringify("true"));
       localStorage.setItem("currentUser", JSON.stringify(user));
       history.push("/dashboard");
+      return;
+    } else {
+      return resp.message;
     }
   }
+  return "Request Failed";
 };

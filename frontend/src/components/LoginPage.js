@@ -30,17 +30,11 @@ const LoginPage = () => {
     const reqUrl = "/api/v1/login";
     authRequests(reqUrl, reqBody).then((response) => {
       console.log(response);
-      checkResponse(response, reqBody, history);
+      let msg = checkResponse(response, reqBody, history);
+      if (msg) {
+        SetErr(msg);
+      }
     });
-
-    // here
-    // needs logic that checks successful/unsuccessful login
-
-    // if successful
-    // history.push("/dashboard")
-
-    // else
-    // show error message
   };
 
   return (

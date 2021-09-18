@@ -12,7 +12,7 @@ export const authRequests = async (url, body) => {
   return response.data;
 };
 
-export const getUserSavedStocks = async (url) => {
-  const response = await instance.get(url);
+export const getUserSavedStocks = async (url, body) => {
+  const response = await instance.get(url, body);
   return response.data;
 };
