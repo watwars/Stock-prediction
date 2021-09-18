@@ -60,6 +60,7 @@ exports.getPortfolio = async (request, response) => {
       username: request.body.username,
       password: request.body.password,
     });
+    console.log(portfolio);
     if (portfolio !== null) {
       // adding info (risks, expected win/loss) to portfolio using our ML algorithm and using real-time data
       // portfolio = await enhancePortfolio(portfolio);

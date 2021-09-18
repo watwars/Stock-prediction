@@ -16,10 +16,11 @@ market_variance = weekly_returns_market.var()
 market_variance = market_variance.iloc[0]
 
 def beta_calculation(user_input):
+    betas = []
     for stock_ticker_symbol in user_input:
         stock = []
         stock.append(stock_ticker_symbol)
-        df = reader.get_data_yahoo(user_input, start, end)
+        df = reader.get_data_yahoo([stock_ticker_symbol], start, end)
         weekly_returns_stock = df.resample('W').ffill().pct_change()
         weekly_returns_stock = weekly_returns_stock.dropna()
         weekly_returns_stock = weekly_returns_stock['Adj Close']
@@ -28,7 +29,8 @@ def beta_calculation(user_input):
         covariance = covariance.loc['Market Avg', stock_ticker_symbol].round(7)
         beta = covariance / market_variance
         beta = beta.round(3)
-        return 'Beta for', ''.join(stock), ':', beta
+        betas.append(beta)
+    return betas
 
 def growth_category(growth_pct):
     if growth_pct > 0.05:
@@ -44,13 +46,13 @@ def growth_category(growth_pct):
 
 
 
-for stock_ticker_symbol in user_input:
-    stock = []
-    stock.append(stock_ticker_symbol)
-    df = reader.get_data_yahoo(user_input, start, end)
-    weekly_returns_stock_ml = df.resample('W').ffill().pct_change()
-    weekly_returns_stock_ml = weekly_returns_stock_ml.dropna()
-    weekly_returns_stock_ml = weekly_returns_stock_ml['Adj Close']
-    print(weekly_returns_stock_ml)
-    #weekly_returns_stock_ml['Stock Growth Category'] = weekly_returns_stock_ml['Adj Close'].apply(growth_category)
-    #print(weekly_returns_stock_ml)
+# for stock_ticker_symbol in user_input:
+#     stock = []
+#     stock.append(stock_ticker_symbol)
+#     df = reader.get_data_yahoo(user_input, start, end)
+#     weekly_returns_stock_ml = df.resample('W').ffill().pct_change()
+#     weekly_returns_stock_ml = weekly_returns_stock_ml.dropna()
+#     weekly_returns_stock_ml = weekly_returns_stock_ml['Adj Close']
+#     print(weekly_returns_stock_ml)
+#     #weekly_returns_stock_ml['Stock Growth Category'] = weekly_returns_stock_ml['Adj Close'].apply(growth_category)
+#     #print(weekly_returns_stock_ml)
