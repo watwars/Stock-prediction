@@ -16,3 +16,8 @@ export const getUserSavedStocks = async (url, body) => {
   const response = await instance.post(url, body);
   return response.data;
 };
+
+export const updateStock = async (url, body) => {
+  const response = await instance.put(url, body);
+  return response.data;
+};

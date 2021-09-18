@@ -93,6 +93,7 @@ exports.getPortfolio = async (request, response) => {
 };
 
 exports.updatePortfolio = async (request, response) => {
+  console.log(request.body);
   try {
     // findOne return null is none
     let newPortfolio = await UserPortfolio.findOneAndReplace(
@@ -107,8 +108,8 @@ exports.updatePortfolio = async (request, response) => {
       }
     );
     // checkValidPortfolio throws an exception if some stock ticker symbols are invalid (not found).
-    checkValidPortfolio(portfolio);
-    if (portfolio !== null) {
+    checkValidPortfolio(newPortfolio);
+    if (newPortfolio !== null) {
       // adding info (risks, expected win/loss) to portfolio using our ML algorithm and using real-time data
       newPortfolio = await enhancePortfolio(newPortfolio);
       response.status(200);
