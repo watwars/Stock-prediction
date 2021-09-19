@@ -1,1 +1,1 @@
-# Amazon-product-comparison
+# Stock Predictions
