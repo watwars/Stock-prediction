@@ -17,7 +17,7 @@ def beta_calculation(user_input):
     market_variance = weekly_returns_market.var()
     market_variance = market_variance.iloc[0]
 
-    betas = []
+    beta = 0
     for stock_ticker_symbol in user_input:
         df = reader.get_data_yahoo([stock_ticker_symbol], start, end)
         weekly_returns_stock = df.resample('W').ffill().pct_change()
@@ -28,8 +28,7 @@ def beta_calculation(user_input):
         covariance = covariance.loc['Market Avg', stock_ticker_symbol].round(7)
         beta = covariance / market_variance
         beta = beta.round(3)
-        betas.append(beta)
-    return betas
+    return beta
 
 
 def growth_category(growth_pct):

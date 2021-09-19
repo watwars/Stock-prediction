@@ -18,7 +18,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.post("/betas")
-def root(stocks) -> List[float]:
+@app.get("/betas")
+def root(stocks) -> float:
     print(stocks)
-    return {"betas": beta_calculation(stocks)}
+    return {"betas": beta_calculation([stocks])}
