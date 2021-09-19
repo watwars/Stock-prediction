@@ -89,6 +89,13 @@ exports.updatePortfolio = async (request, response) => {
   try {
     // checkValidPortfolio throws an exception if some stock ticker symbols are invalid (not found).
     checkValidPortfolio(request.body.portfolioEntries);
+    let portfolio = await UserPortfolio.findOne({
+      username: request.body.username,
+      password: request.body.password,
+    });
+    if (portfolio === null) {
+      throw "Invalid Credentials";
+    }
     // findOne return null is none
     let newPortfolio = await UserPortfolio.findOneAndReplace(
       {
