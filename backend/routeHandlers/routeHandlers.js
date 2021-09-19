@@ -62,7 +62,7 @@ exports.getPortfolio = async (request, response) => {
     });
     if (portfolio !== null) {
       // adding info (risks, expected win/loss) to portfolio using our ML algorithm and using real-time data
-      // portfolio = await enhancePortfolio(portfolio);
+      portfolio = await enhancePortfolio(portfolio.toObject());
       response.status(200);
       response.json({
         status: "Success",
