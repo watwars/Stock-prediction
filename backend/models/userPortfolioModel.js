@@ -11,7 +11,6 @@ const stockEntrySchema = new mongoose.Schema({
   stockTickerSymbol: {
     type: String,
     required: [true, "ERROR: Stock must have a ticker symbol"],
-    unique: [true, "ERROR: Ticker symbol must be unique"],
   },
   shareQuantity: {
     type: Number,
@@ -33,6 +32,14 @@ const userPortfolioSchema = new mongoose.Schema({
   portfolioEntries: {
     type: [stockEntrySchema],
     required: [true, "ERROR: user must have a portfolio."],
+  },
+  email: {
+    type: String,
+    required: false,
+  },
+  isSubscribed: {
+    type: Boolean,
+    default: false,
   },
 });
 

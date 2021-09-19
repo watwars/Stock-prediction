@@ -3,7 +3,6 @@ const enhancePortfolio = require("../utils/enhancePortfolio");
 const checkValidPortfolio = require("../utils/checkValidPortfolio");
 
 exports.login = async (request, response) => {
-  console.log(request.body);
   try {
     // findOne return null is none
     const isCredentialsValid = await UserPortfolio.findOne({
@@ -17,6 +16,7 @@ exports.login = async (request, response) => {
         // TODO: returns the infos obtained from database
       });
     } else {
+      // response.status(404);
       response.status(200);
       response.json({
         status: "fail",
@@ -24,7 +24,6 @@ exports.login = async (request, response) => {
       });
     }
   } catch (error) {
-    console.error(error);
     response.status(400);
     response.json({
       status: "error",
@@ -35,7 +34,6 @@ exports.login = async (request, response) => {
 
 // signUpUser returns true if signup successful, false otherwise (username already exist)
 exports.signUpUser = async (request, response) => {
-  console.log(request.body);
   try {
     await UserPortfolio.create({
       username: request.body.username,
@@ -47,7 +45,6 @@ exports.signUpUser = async (request, response) => {
       status: "Success",
     });
   } catch (error) {
-    console.error(error);
     response.status(400);
     response.json({
       status: "error",
@@ -57,44 +54,42 @@ exports.signUpUser = async (request, response) => {
 };
 
 exports.getPortfolio = async (request, response) => {
-  console.log(request.body);
   try {
     // findOne return null is none
     let portfolio = await UserPortfolio.findOne({
       username: request.body.username,
       password: request.body.password,
     });
-    // adding info (risks, expected win/loss) to portfolio using our ML algorithm and using real-time data
-    portfolio = await enhancePortfolio(portfolio);
-    if (portfolio) {
+    console.log(portfolio);
+    if (portfolio !== null) {
+      // adding info (risks, expected win/loss) to portfolio using our ML algorithm and using real-time data
+      // portfolio = await enhancePortfolio(portfolio);
       response.status(200);
       response.json({
         status: "Success",
         data: portfolio,
-        message: "",
       });
     } else {
+      // response.status(404);
       response.status(200);
       response.json({
         status: "fail",
         message: "Portfolio not found.",
-        data: null,
       });
     }
   } catch (error) {
-    console.error(error);
     response.status(400);
     response.json({
       status: "error",
       message: `Unknown error. ${error}`,
-      data: null,
     });
   }
 };
 
 exports.updatePortfolio = async (request, response) => {
-  console.log(request.body);
   try {
+    // checkValidPortfolio throws an exception if some stock ticker symbols are invalid (not found).
+    checkValidPortfolio(request.body.portfolioEntries);
     // findOne return null is none
     let newPortfolio = await UserPortfolio.findOneAndReplace(
       {
@@ -107,8 +102,6 @@ exports.updatePortfolio = async (request, response) => {
         portfolioEntries: request.body.portfolioEntries,
       }
     );
-    // checkValidPortfolio throws an exception if some stock ticker symbols are invalid (not found).
-    checkValidPortfolio(newPortfolio);
     if (newPortfolio !== null) {
       // adding info (risks, expected win/loss) to portfolio using our ML algorithm and using real-time data
       newPortfolio = await enhancePortfolio(newPortfolio);
@@ -118,6 +111,7 @@ exports.updatePortfolio = async (request, response) => {
         data: newPortfolio,
       });
     } else {
+      // response.status(404);
       response.status(200);
       response.json({
         status: "fail",
@@ -125,7 +119,75 @@ exports.updatePortfolio = async (request, response) => {
       });
     }
   } catch (error) {
-    console.error(error);
+    response.status(400);
+    response.json({
+      status: "error",
+      message: `${error}`,
+    });
+  }
+};
+
+exports.subscribeEmail = async (request, response) => {
+  try {
+    // findOne return null is none
+    let newPortfolio = await UserPortfolio.findOneAndUpdate(
+      {
+        username: request.body.username,
+        password: request.body.password,
+      },
+      {
+        email: request.body.email,
+        isSubscribed: true,
+      }
+    );
+    if (newPortfolio !== null) {
+      response.status(200);
+      response.json({
+        status: "Success",
+        data: newPortfolio,
+      });
+    } else {
+      response.status(404);
+      response.json({
+        status: "fail",
+        message: "Portfolio not found.",
+      });
+    }
+  } catch (error) {
+    response.status(400);
+    response.json({
+      status: "error",
+      message: `${error}`,
+    });
+  }
+};
+
+exports.unsubscribeEmail = async (request, response) => {
+  try {
+    // findOne return null is none
+    let newPortfolio = await UserPortfolio.findOneAndUpdate(
+      {
+        username: request.body.username,
+        password: request.body.password,
+      },
+      {
+        isSubscribed: false,
+      }
+    );
+    if (newPortfolio !== null) {
+      response.status(200);
+      response.json({
+        status: "Success",
+        data: newPortfolio,
+      });
+    } else {
+      response.status(404);
+      response.json({
+        status: "fail",
+        message: "Portfolio not found.",
+      });
+    }
+  } catch (error) {
     response.status(400);
     response.json({
       status: "error",

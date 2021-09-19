@@ -2,6 +2,10 @@ import React from "react";
 import { withRouter } from "react-router-dom";
 import { Header, LoadingScreen } from "./DashboardItems";
 import { getUserSavedStocks, updateStock } from "../helpers/requests";
+import ErrorMessage from "./ErrorMessage";
+import ClearIcon from "@mui/icons-material/Clear";
+
+import "../css/Dashboard.css";
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -12,6 +16,7 @@ class Dashboard extends React.Component {
       stockName: "",
       stockNumber: 1,
       portfolioEntries: [],
+      errorMsg: "",
     };
   }
 
@@ -25,10 +30,16 @@ class Dashboard extends React.Component {
         password: currentUser.password,
       }).then((resp) => {
         console.log(resp);
+        let data = [];
+        if (resp.status === "fail") {
+          this.setState({ errorMsg: resp.message });
+        } else {
+          data = resp.data.portfolioEntries;
+        }
         this.setState({
           currentUser,
           isSetup: true,
-          portfolioEntries: resp.data.portfolioEntries,
+          portfolioEntries: data,
         });
       });
     }
@@ -39,14 +50,31 @@ class Dashboard extends React.Component {
   };
 
   handleAddStock = () => {
+    let { stockName, stockNumber } = this.state;
+    stockName = stockName.toUpperCase();
+    if (stockName === "") {
+      this.setState({ errorMsg: "Missing input" });
+      return;
+    }
+    if (stockName.includes(" ")) {
+      this.setState({ errorMsg: "Stock symbols cannot contain spaces" });
+      return;
+    }
+    for (let p of this.state.portfolioEntries) {
+      if (p.stockTickerSymbol === stockName) {
+        this.setState({ errorMsg: "Stock already added" });
+        return;
+      }
+    }
     const newItem = {
-      stockTickerSymbol: this.state.stockName,
-      shareQuantity: this.state.stockNumber,
+      stockTickerSymbol: stockName,
+      shareQuantity: stockNumber,
     };
     this.setState({
       portfolioEntries: this.state.portfolioEntries.concat([newItem]),
       stockName: "",
       stockNumber: 1,
+      errorMsg: "",
     });
   };
 
@@ -55,7 +83,18 @@ class Dashboard extends React.Component {
     currentUser.portfolioEntries = this.state.portfolioEntries;
     updateStock("/api/v1/portfolio", currentUser).then((resp) => {
       console.log(resp);
+      if (resp.status !== "Success") {
+        this.setState({ errorMsg: resp.message });
+      }
     });
+  };
+
+  handleDeleteStock = (name) => {
+    console.log(name);
+    let selected = this.state.portfolioEntries.filter(
+      (p) => p.stockTickerSymbol !== name
+    );
+    this.setState({ portfolioEntries: selected });
   };
 
   render() {
@@ -63,9 +102,14 @@ class Dashboard extends React.Component {
     const { portfolioEntries } = this.state;
     const entries = portfolioEntries.map((ent, index) => {
       return (
-        <div key={index}>
-          <div>{ent.stockTickerSymbol}</div>
-          <div>{ent.shareQuantity}</div>
+        <div key={index} className="stockItem">
+          <div>
+            <div>Stock Symbol: {ent.stockTickerSymbol}</div>
+            <div>Quantity: {ent.shareQuantity}</div>
+          </div>
+          <div onClick={() => this.handleDeleteStock(ent.stockTickerSymbol)}>
+            <ClearIcon />
+          </div>
         </div>
       );
     });
@@ -74,23 +118,56 @@ class Dashboard extends React.Component {
         {this.state.isSetup ? (
           <div>
             <Header username={username} />
-            {entries}
-            <form>
-              <input
-                type="text"
-                name="stockName"
-                value={this.state.stockName.toUpperCase()}
-                onChange={this.handleInput}
-              />
-              <input
-                type="number"
-                name="stockNumber"
-                value={this.state.stockNumber}
-                onChange={this.handleInput}
-              />
-            </form>
-            <button onClick={this.handleAddStock}>Add Item</button>
-            <button onClick={this.handleUpdateDatabase}>Save and Update</button>
+            {this.state.errorMsg !== "" ? (
+              <div className="dashboardError">
+                <ErrorMessage message={this.state.errorMsg} />
+              </div>
+            ) : (
+              <></>
+            )}
+            <div className="dashboardContent">
+              <div className="stocks">{entries}</div>
+              <div className="dashboardControls">
+                <div className="addStock lead">
+                  Add a new stock
+                  <form className="form-group">
+                    <input
+                      type="text"
+                      name="stockName"
+                      value={this.state.stockName.toUpperCase()}
+                      onChange={this.handleInput}
+                      className="form-control"
+                    />
+                    <input
+                      type="number"
+                      name="stockNumber"
+                      value={this.state.stockNumber}
+                      onChange={this.handleInput}
+                      className="form-control"
+                    />
+                  </form>
+                  <span>Stock Symbol</span>
+                  <span>Stock Qty</span>
+                  <div></div>
+                  <button
+                    onClick={this.handleAddStock}
+                    className="btn btn-success"
+                    style={{ marginTop: "10px" }}
+                  >
+                    Add Item
+                  </button>
+                </div>
+                <div className="updateStock">
+                  <button
+                    onClick={this.handleUpdateDatabase}
+                    className="btn btn-info"
+                    style={{ width: "100%" }}
+                  >
+                    Save and Update
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         ) : (
           <LoadingScreen />

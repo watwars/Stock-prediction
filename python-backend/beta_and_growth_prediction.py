@@ -28,11 +28,9 @@ def beta_calculation(user_input):
         covariance = covariance.loc['Market Avg', stock_ticker_symbol].round(7)
         beta = covariance / market_variance
         beta = beta.round(3)
-        str_beta = str(beta)
-        beta_info = 'Beta for ' + ''.join(stock_ticker_symbol) + ': '+ str_beta
-        betas.append(beta_info)
+        betas.append(beta)
     return betas
-#print(beta_calculation(stock_list))
+
 
 def growth_category(growth_pct):
     if growth_pct > 0.05:
@@ -59,3 +57,4 @@ for stock_ticker_symbol in user_input:
     #weekly_returns_stock_ml['Stock Growth Category'] = weekly_returns_stock_ml['Adj Close'].apply(growth_category)
     #print(weekly_returns_stock_ml)
 '''
+
